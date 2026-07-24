@@ -1,0 +1,22 @@
+{
+  "name": "@corelink/sdk",
+  "version": "0.1.0-draft",
+  "description": "Generated TypeScript client for the CoreLink Public API",
+  "author": "CoreLink Platform",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CoreLinkPlatform/sdk-typescript.git"
+  },
+  "main": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
+  "module": "./dist/esm/index.js",
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc && tsc -p tsconfig.esm.json",
+    "test:generated": "npm run build",
+    "prepare": "npm run build"
+  },
+  "devDependencies": {
+    "typescript": "^4.0 || ^5.0"
+  }
+}
