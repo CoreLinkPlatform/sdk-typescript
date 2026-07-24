@@ -1,26 +1,31 @@
 # CoreLink TypeScript SDK
 
-The future official TypeScript SDK for Node.js, browser, React and Next.js
-applications using CoreLink public APIs.
+Generated prerelease client for the CoreLink Public API. The package is not
+published or production-supported until the linked public contract and runtime
+PRs are merged and sandbox compatibility tests pass.
 
-## Current status
+## Contract provenance
 
-This repository is a scaffold: no package manifest, source code or published
-artifact exists yet. It must not be represented as installable or production
-ready.
+- Contract: `corelink-public-v1.yaml`, version `1.0.0-draft`
+- Source branch: `agent/p3-1-contracts`
+- Source commit: `701e693`
+- Generator: OpenAPI Generator `7.12.0`, `typescript-fetch`
 
-## Planned capabilities
+The public client exposes canonical CoreLink identifiers only. Connector
+selection and integration-provider identifiers remain server-side concerns.
 
-- Typed public API client generated or validated against `api-contracts`.
-- Configurable OAuth token acquisition without embedding credentials in client
-  bundles.
-- Tenant-aware device, provisioning, command, telemetry and event workflows.
-- Typed pagination, problem responses, retry guidance and webhook helpers.
-- Browser-safe and server-side entry points with clear runtime support.
+## Local verification
 
-## Release requirements
+```sh
+npm install
+npm run test:generated
+```
 
-Publish a semver version only after the matching public OpenAPI contract is
-reviewed and non-empty, integration behavior is tested against the platform,
-and the README includes installation, authentication, compatibility and
-migration guidance.
+Regeneration is documented in [CODEGEN.md](CODEGEN.md). Do not edit files under
+`src/` by hand; change the public contract and regenerate instead.
+
+## Release gate
+
+Before publishing, require a merged versioned contract, runtime compatibility
+tests against the sandbox tenant, a clean generated diff, package build, and
+release notes that identify the contract commit.
