@@ -1,31 +1,71 @@
 # CoreLink TypeScript SDK
 
-Generated prerelease client for the CoreLink Public API. The package is not
-published or production-supported until the linked public contract and runtime
-PRs are merged and sandbox compatibility tests pass.
+> **Maturity: Prerelease Alpha**  
+> Package metadata: `@corelink/sdk` `0.1.0-draft`  
+> Public contract: `corelink-public-v1.yaml` `1.0.0-draft`
 
-## Contract provenance
+Generated TypeScript client for the CoreLink Public API. The client exists and builds from source, but it is not yet a production-supported npm release. Supported publication remains gated by tagged contract provenance and sandbox/runtime conformance.
 
-- Contract: `corelink-public-v1.yaml`, version `1.0.0-draft`
-- Source branch: `agent/p3-1-contracts`
-- Source commit: `701e693`
-- Generator: OpenAPI Generator `7.12.0`, `typescript-fetch`
+## What is currently covered
 
-The public client exposes canonical CoreLink identifiers only. Connector
-selection and integration-provider identifiers remain server-side concerns.
+The generated surface follows the current reviewed public contract, whose primary public slice is Device + Command. Broader telemetry/location/partner/event surfaces must not be assumed supported until their contracts and conformance gates are accepted.
 
-## Local verification
+## Build from source
 
-```sh
-npm install
+```bash
+npm ci
+npm run build
+```
+
+Validate generated output with:
+
+```bash
 npm run test:generated
 ```
 
-Regeneration is documented in [CODEGEN.md](CODEGEN.md). Do not edit files under
-`src/` by hand; change the public contract and regenerate instead.
+This is a source/prerelease workflow, not an instruction to install a published Stable package.
 
-## Release gate
+## Authentication and tenant context
 
-Before publishing, require a merged versioned contract, runtime compatibility
-tests against the sandbox tenant, a clean generated diff, package build, and
-release notes that identify the contract commit.
+The current public API uses Bearer JWT authentication and explicit tenant-scoped resource paths. Applications must obtain credentials through their approved CoreLink environment/onboarding flow; the draft public contract does not define a self-service token issuer.
+
+Keep tokens out of browser storage where a server-side session/BFF can be used, and never retry `403` by changing tenant IDs.
+
+## Devices and commands
+
+Use canonical CoreLink resource identifiers such as `corelink_device_id`; provider IDs are implementation details.
+
+Command creation follows the contract's idempotency semantics. Reuse the same `Idempotency-Key` only when retrying the same logical command. An accepted command response is asynchronous and does not prove physical-device execution succeeded.
+
+The SDK is generated, so exact generated method/type names can change while this package remains prerelease. Use the generated source/types for the exact API of the pinned revision rather than relying on undocumented hand-written wrappers.
+
+## Errors and retries
+
+Follow the OpenAPI problem/error definitions. Do not blindly retry validation/auth/authorization errors. Preserve correlation/request identifiers for diagnosis and avoid logging tokens or sensitive payload data.
+
+## Contract provenance
+
+Current generation provenance is recorded in `.corelink-contract.json` and `CODEGEN.md`. Existing prerelease metadata references a development source revision; supported releases must move to immutable/tagged contract provenance.
+
+## Regeneration
+
+Do not hand-edit generated files under `src/`. Change the normative contract in [`CoreLinkPlatform/api-contracts`](https://github.com/CoreLinkPlatform/api-contracts), then regenerate according to [CODEGEN.md](CODEGEN.md) and review the generated diff.
+
+## Release gates
+
+Before a supported package release:
+
+- contract revision/tag is immutable and version-identifiable;
+- generation is reproducible;
+- authentication/tenant/error/idempotency behavior matches the contract;
+- compatibility passes against an accepted mock/sandbox/runtime revision;
+- package provenance/signing/release policy is satisfied;
+- docs/release notes identify exact compatibility and maturity.
+
+Backlog: [TS-01](https://github.com/CoreLinkPlatform/sdk-typescript/issues/3), [TS-02](https://github.com/CoreLinkPlatform/sdk-typescript/issues/4), [TS-03](https://github.com/CoreLinkPlatform/sdk-typescript/issues/5).
+
+## Documentation
+
+- [CoreLink developer docs](https://github.com/CoreLinkPlatform/developer-docs)
+- [API contracts](https://github.com/CoreLinkPlatform/api-contracts)
+- [Repository maturity](https://github.com/CoreLinkPlatform/.github/blob/main/REPOSITORY_MATURITY.md)
