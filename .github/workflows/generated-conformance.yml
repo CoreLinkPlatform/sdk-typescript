@@ -1,0 +1,51 @@
+name: Generated SDK Conformance
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  regenerate-and-build:
+    runs-on: blacksmith-2vcpu-ubuntu-2404
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Fetch immutable contract
+        run: |
+          curl --fail --location \
+            https://raw.githubusercontent.com/CoreLinkPlatform/api-contracts/v1.0.0-draft/openapi/corelink-public-v1.yaml \
+            --output /tmp/corelink-public-v1.yaml
+      - name: Fetch pinned generator
+        run: |
+          curl --fail --location \
+            https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/7.12.0/openapi-generator-cli-7.12.0.jar \
+            --output /tmp/openapi-generator-cli.jar
+      - name: Regenerate in temporary directory
+        run: |
+          rm -rf /tmp/corelink-ts-generated
+          mkdir -p /tmp/corelink-ts-generated
+          java -jar /tmp/openapi-generator-cli.jar generate \
+            -i /tmp/corelink-public-v1.yaml \
+            -g typescript-fetch \
+            -o /tmp/corelink-ts-generated \
+            --additional-properties=npmName=@corelink/sdk,npmVersion=0.1.0-draft,supportsES6=true,typescriptThreePlus=true \
+            --global-property=apiDocs=false,modelDocs=false
+      - name: Verify generated source is reproducible
+        run: diff -ru --exclude='.openapi-generator' src /tmp/corelink-ts-generated/src
+      - name: Build checked-in SDK
+        run: |
+          npm ci
+          npm run test:generated
