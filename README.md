@@ -1,5 +1,11 @@
 # CoreLink TypeScript SDK
 
+[![Maturity: Prerelease Alpha](https://img.shields.io/badge/maturity-prerelease%20alpha-orange)](https://github.com/CoreLinkPlatform/.github/blob/main/REPOSITORY_MATURITY.md)
+[![Generated conformance](https://github.com/CoreLinkPlatform/sdk-typescript/actions/workflows/generated-conformance.yml/badge.svg?branch=main)](https://github.com/CoreLinkPlatform/sdk-typescript/actions/workflows/generated-conformance.yml)
+[![Package: 0.1.0-draft](https://img.shields.io/badge/package-0.1.0--draft-orange)](package.json)
+[![Contract: 1.0.0-draft](https://img.shields.io/badge/contract-1.0.0--draft-blue)](https://github.com/CoreLinkPlatform/api-contracts)
+[![TypeScript](https://img.shields.io/badge/TypeScript-SDK-blue)](https://www.typescriptlang.org/)
+
 > **Maturity: Prerelease Alpha**  
 > Package metadata: `@corelink/sdk` `0.1.0-draft`  
 > Public contract: `corelink-public-v1.yaml` `1.0.0-draft`
